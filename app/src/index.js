@@ -14,8 +14,8 @@ const App = {
       const networkId = await web3.eth.net.getId();
       const deployedNetwork = starNotaryArtifact.networks[networkId];
       this.meta = new web3.eth.Contract(
-        starNotaryArtifact.abi,
-        deployedNetwork.address,
+          starNotaryArtifact.abi,
+          deployedNetwork.address,
       );
 
       // get accounts
@@ -37,11 +37,6 @@ const App = {
     const id = document.getElementById("starId").value;
     await createStar(name, id).send({from: this.account});
     App.setStatus("New Star Owner is " + this.account + ".");
-  },
-
-  // Implement Task 4 Modify the front end of the DAPP
-  lookUp: async function (){
-    
   }
 
 };
