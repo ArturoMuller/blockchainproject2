@@ -63,11 +63,18 @@ contract StarNotary is ERC721 {
 
     // Implement Task 1 lookUptokenIdToStarInfo
     function lookUptokenIdToStarInfo (uint _tokenId) public view returns (string memory) {
-        //1. You should return the Star saved in tokenIdToStarInfo mapping
+        return tokenIdToStarInfo[_tokenId].name;
     }
 
     // Implement Task 1 Exchange Stars function
     function exchangeStars(uint256 _tokenId1, uint256 _tokenId2) public {
+        address addressToken1 = ownerOf(_tokenId1);
+        address addressToken2 = ownerOf(_tokenId2);
+        require(msg.sender == addressToken1 || msg.sender == addressToken2, "You need to own the star");
+        _transferFrom(addressToken2, addressToken1, _tokenId2); // We can't use _addTokenTo or_removeTokenFrom functions, now we have to use _transferFrom
+        _transferFrom(addressToken1, addressToken2, _tokenId1); // We can't use _addTokenTo or_removeTokenFrom functions, now we have to use _transferFrom
+
+
         //1. Passing to star tokenId you will need to check if the owner of _tokenId1 or _tokenId2 is the sender
         //2. You don't have to check for the price of the token (star)
         //3. Get the owner of the two tokens (ownerOf(_tokenId1), ownerOf(_tokenId2)
@@ -76,8 +83,9 @@ contract StarNotary is ERC721 {
 
     // Implement Task 1 Transfer Stars
     function transferStar(address _to1, uint256 _tokenId) public {
-        //1. Check if the sender is the ownerOf(_tokenId)
-        //2. Use the transferFrom(from, to, tokenId); function to transfer the Star
+        address ownerAddress = ownerOf(_tokenId);
+        require(msg.sender == ownerAddress, "You need to own the star to transfer it");
+        _transferFrom(msg.sender, _to1, _tokenId);
     }
 
 }

@@ -94,19 +94,43 @@ it('can add the star name and star symbol properly', async() => {
 });
 
 it('lets 2 users exchange stars', async() => {
-    // 1. create 2 Stars with different tokenId
-    // 2. Call the exchangeStars functions implemented in the Smart Contract
-    // 3. Verify that the owners changed
-});
+    let instance = await StarNotary.deployed();
+    let user1 = accounts[1];
+    let user2 = accounts[2];
+    let starId1= 6;
+    let starId2 = 7;
+    await instance.createStar('awesome star', starId1, {from: user1});
+    await instance.createStar('awesome star', starId2, {from: user2});
+    await instance.exchangeStars(starId1, starId2, {from: user1});
+    assert.equal(await instance.ownerOf.call(starId1), user2);
+    assert.equal(await instance.ownerOf.call(starId2), user1);
+}).timeout(40000);
 
 it('lets a user transfer a star', async() => {
     // 1. create a Star with different tokenId
     // 2. use the transferStar function implemented in the Smart Contract
     // 3. Verify the star owner changed.
-});
+    let instance = await StarNotary.deployed();
+    let user1 = accounts[1];
+    let user2 = accounts[2];
+    let starId = 9;
+    instance.createStar('awesome star', starId, {from: user1});
+    setTimeout(async function() {
+        instance.transferStar(user2, starId, {from: user1});
+    }, 10000);
+    setTimeout(async function() {
+        let starNewOwner = await instance.ownerOf.call(starId);
+        assert.equal(starNewOwner, user2);
+    }, 15000);
+
+    }).timeout(40000);
 
 it('lookUptokenIdToStarInfo test', async() => {
-    // 1. create a Star with different tokenId
-    // 2. Call your method lookUptokenIdToStarInfo
-    // 3. Verify if you Star name is the same
+    let tokenId = 567;
+    let instance = await StarNotary.deployed();
+    instance.createStar('Awesome Star2!', tokenId, {from: accounts[0]});
+    setTimeout(async function() {
+        let starName = await instance.lookUptokenIdToStarInfo(tokenId);
+        assert.equal(starName, 'Awesome Star2!');
+    }, 15000);
 });
