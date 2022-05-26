@@ -37,7 +37,6 @@ const App = {
     const id = document.getElementById("starId").value;
     debugger;
     await createStar(name, id).send({from: this.account});
-    debugger;
     App.setStatus("New Star Owner is " + this.account + ".");
   },
 
@@ -46,7 +45,8 @@ const App = {
     const id  =  document.getElementById("name").value;
     debugger;
     const name = await lookUptokenIdToStarInfo(id).send({from: this.account});
-    App.setStatus("New Star Owner is " + this.account + ".");
+    App.setStatus("star is called" + name + ".");
+
   }
 
 };
